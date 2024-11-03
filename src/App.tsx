@@ -1,13 +1,23 @@
+import { useEffect, useState } from 'react';
 import './App.css'
+import { HackerNewsScraper } from './scraper';
 
 function App() {
-  fetch('http://localhost:4000/news')
-    .then(res => res.text())
-    .then(data => console.log(data))
+  const [posts, setPosts] = useState<NodeListOf<Element>>();
+
+  useEffect(() => {
+    const scraper = new HackerNewsScraper();
+    scraper.getPosts()
+      .then(data => { 
+        setPosts(data) 
+      })
+  }, []);
 
   return (
     <>
-      
+    {posts && Array.from(posts).map((value, index) => (
+      <div key={index} dangerouslySetInnerHTML={{ __html: value.innerHTML}}></div>
+    ))}
     </>
   )
 }
