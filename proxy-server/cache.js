@@ -11,9 +11,10 @@ export class CacheProvider {
             return null;
         }
 
-        const now = new Date(Date.Now());
+        const now = new Date(Date.now());
 
-        if (entry.expiration_time < now) {
+        if (entry.expiration_time.getTime() < now.getTime()) {
+            delete this.cache[key]
             return null;
         }
 
@@ -23,7 +24,7 @@ export class CacheProvider {
     set(key, value) {
         const new_entry = {
             value: value,
-            expiration_time: new Date(Date.Now() + this.expiration_time_offset)
+            expiration_time: new Date(Date.now() + this.expiration_time_offset * 1000)
         }
 
         this.cache[key] = new_entry;
