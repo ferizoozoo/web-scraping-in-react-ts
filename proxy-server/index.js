@@ -1,11 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import { CacheProvider } from './cache.js';
 
 const app = express();
 const PORT = 4000;
 const PROXY_URL = 'https://news.ycombinator.com';
 
 app.use(cors());
+
+const cache = new CacheProvider();
 
 async function getNews() {
     try {
@@ -17,7 +20,11 @@ async function getNews() {
 }
 
 app.get('/news', async (req, res, next) => {
-    const news = await getNews();
+    let news = cache.get('news');
+    if (news == null) {
+        news = await getNews();
+        cache.set('news', news);
+    }
     res.send(news);
 });
 
