@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 import { HackerNewsScraper } from './scraper';
+import { Post } from './types';
+import Posts from './components/news/posts';
 
 function App() {
-  const [posts, setPosts] = useState<NodeListOf<Element>>();
+  const [posts, setPosts] = useState<Post[]>();
 
   useEffect(() => {
     const scraper = new HackerNewsScraper();
@@ -14,11 +16,7 @@ function App() {
   }, []);
 
   return (
-    <>
-    {posts && Array.from(posts).map((value, index) => (
-      <div key={index} dangerouslySetInnerHTML={{ __html: value.innerHTML}}></div>
-    ))}
-    </>
+    <Posts posts={posts} />
   )
 }
 

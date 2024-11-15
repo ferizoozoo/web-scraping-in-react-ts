@@ -1,3 +1,5 @@
+import { Post } from "./types";
+
 export class HackerNewsScraper {
     private dom: Document | undefined;
     private ready: Promise<void>;
@@ -11,8 +13,18 @@ export class HackerNewsScraper {
             })
     }
 
-    async getPosts(): Promise<NodeListOf<Element> | undefined> {
+    async getPosts(): Promise<Post[]> {
         await this.ready;
-        return this.dom?.querySelectorAll(".athing");
+        const newsElement = this.dom?.querySelectorAll(".athing");
+        const posts: Post[] = []
+
+        newsElement?.forEach((element) => {
+            posts.push({
+                title: element?.childNodes[4]?.innerText,
+                link: element?.childNodes[4]?.childNodes[0]?.childNodes[0]?.href
+            })
+        })
+
+        return posts;
     }
 }
